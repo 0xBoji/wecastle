@@ -1,0 +1,2 @@
+export const MODULE_ADDRESS =
+  "0e1e6468dde6182fb2a41831bfc806f11728a2ce0663ab2894906e8b9c4e6dfb";
