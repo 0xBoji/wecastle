@@ -54,7 +54,7 @@ const useContract = () => {
       setLoading(true);
       setError(null);
 
-      //create txn
+      // create txn
       // const txn = await aptos.transaction.build.simple({
       //   sender: account.address,
       //   data: {

@@ -1,10 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import {
-  Aptos,
-  AptosConfig,
-  InputViewFunctionData,
-  Network,
-} from "@aptos-labs/ts-sdk";
 import { Box, Modal } from "@mui/material";
 
 import { MODULE_ADDRESS } from "../../utils/Var";
@@ -24,7 +18,7 @@ const CreateAccount = () => {
   const { callContract } = useContract();
   const { setAlert } = useAlert();
   const auth = useContext(AuthContext);
-  const { connected, account } = useAptosWallet();
+  const { connected, account, disconnect } = useAptosWallet();
 
   useEffect(() => {
     if (!auth) return;
@@ -100,6 +94,12 @@ const CreateAccount = () => {
             content={loading ? "Loading..." : "Create"}
             onClick={handleSubmit}
             disabled={loading}
+          />
+          <p>OR</p>
+          <CustomButton
+            content={"Change Account"}
+            onClick={disconnect}
+            disabled={false}
           />
         </div>
       </Box>
