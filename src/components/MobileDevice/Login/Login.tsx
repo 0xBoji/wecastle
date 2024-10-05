@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { WalletSelector as AntdWalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 // import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useNavigate } from "react-router-dom";
 
