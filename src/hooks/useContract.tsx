@@ -138,11 +138,14 @@ const useContract = () => {
     onError,
     onFinally,
   }: useContractProps) => {
-    const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+    const aptosConfig = new AptosConfig({
+      network: Network.TESTNET,
+      fullnode: "https://testnet.suzuka.movementnetwork.xyz/v1",
+      faucet: "https://faucet.testnet.suzuka.movementlabs.xyz/",
+    });
     const aptos = new Aptos(aptosConfig);
 
     const privateKey = new Ed25519PrivateKey(ADMIN_PRIVATE_KEY);
-
     const adminAccount = await Account.fromPrivateKey({ privateKey });
 
     if (!adminAccount) return;
@@ -164,6 +167,7 @@ const useContract = () => {
       const pendingTransaction = await aptos.signAndSubmitTransaction({
         signer: adminAccount,
         transaction: txn,
+        feePayer: adminAccount,
       });
 
       const executedTransaction = await aptos.waitForTransaction({
