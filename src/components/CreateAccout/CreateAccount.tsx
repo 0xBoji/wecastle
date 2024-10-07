@@ -95,7 +95,7 @@ const CreateAccount = () => {
             onClick={handleSubmit}
             disabled={loading}
           />
-          <p>OR</p>
+          <p className="text-white">OR</p>
           <CustomButton
             content={"Change Account"}
             onClick={disconnect}

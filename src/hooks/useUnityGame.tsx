@@ -13,64 +13,72 @@ const UnityGame = styled(Unity)`
   height: 100%;
 `;
 
-const UnityGameComponent = forwardRef((props, ref) => {
-  const { unityProvider } = useUnityGame();
+const UnityGameComponent = forwardRef(
+  (
+    props: {
+      setIsEndGameModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    },
+    ref,
+  ) => {
+    const { unityProvider } = useUnityGame();
 
-  const { endGame } = useGame();
-  const auth = useContext(AuthContext);
+    const { endGame } = useGame();
+    const auth = useContext(AuthContext);
 
-  // const handlePushRewardGame = useCallback(
-  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //   (points: any) => {
-  //     const p = JSON.parse(points);
-  //     if (!auth) return;
+    // const handlePushRewardGame = useCallback(
+    //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //   (points: any) => {
+    //     const p = JSON.parse(points);
+    //     if (!auth) return;
 
-  //     const round =
-  //       auth.player.current_round !== 0 ? auth.player.current_round : 1;
+    //     const round =
+    //       auth.player.current_round !== 0 ? auth.player.current_round : 1;
 
-  //     console.log("end game");
+    //     console.log("end game");
 
-  //     // endGame(round, p, auth.player.address_id);
-  //   },
-  //   [auth, endGame],
-  // );
+    //     // endGame(round, p, auth.player.address_id);
+    //   },
+    //   [auth, endGame],
+    // );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // const handlePushRewardGame = (points: any) => {
-  //   console.log(points);
-  // };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // const handlePushRewardGame = (points: any) => {
+    //   console.log(points);
+    // };
 
-  const handleComponentEvent = ({ detail }: CustomEvent<{ Score: number }>) => {
-    const { Score } = detail;
-    console.log(Score);
+    const handleComponentEvent = ({
+      detail,
+    }: CustomEvent<{ Score: number }>) => {
+      const { Score } = detail;
 
-    if (!auth) return;
+      if (!auth) return;
 
-    const round =
-      auth.player.current_round !== 0 ? auth.player.current_round : 1;
+      const round =
+        auth.player.current_round !== 0 ? auth.player.current_round : 1;
 
-    endGame(round, Score, auth.player.address_id).then((res) => {
-      alert("end game");
-    });
-  };
+      endGame(round, Score).then((res) => {
+        props.setIsEndGameModalOpen(true);
+      });
+    };
 
-  useEffect(() => {
-    // Add the event listener
-    addEventListener(
-      "PushRewardForPlayerEvent",
-      handleComponentEvent as EventListener,
-    );
-
-    // Clean up the event listener on unmount
-    return () => {
-      removeEventListener(
-        "PushRewardForPlayer",
+    useEffect(() => {
+      // Add the event listener
+      addEventListener(
+        "PushRewardForPlayerEvent",
         handleComponentEvent as EventListener,
       );
-    };
-  }, []);
 
-  return <UnityGame unityProvider={unityProvider} />;
-});
+      // Clean up the event listener on unmount
+      return () => {
+        removeEventListener(
+          "PushRewardForPlayer",
+          handleComponentEvent as EventListener,
+        );
+      };
+    }, []);
+
+    return <UnityGame unityProvider={unityProvider} />;
+  },
+);
 
 export default UnityGameComponent;

@@ -32,7 +32,7 @@ const useContract = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
   // const flow = useAptimusFlow();
-  const { disconnect, account, signTransaction, signAndSubmitTransaction } =
+  const { account, signTransaction, signAndSubmitTransaction } =
     useAptosWallet();
   const callContract = async ({
     functionName,
@@ -99,6 +99,8 @@ const useContract = () => {
         },
       });
 
+      console.log(executedTransaction);
+
       // const response = await aptos.transaction.submit.simple({
       //   transaction: sponsorSignedTransaction,
       //   senderAuthenticator: senderAuth,
@@ -116,7 +118,6 @@ const useContract = () => {
     } catch (error: any) {
       console.log(error);
       if (error.status === 400) {
-        disconnect;
         window.location.reload();
       }
       setError(error.toString());
@@ -146,7 +147,7 @@ const useContract = () => {
     const aptos = new Aptos(aptosConfig);
 
     const privateKey = new Ed25519PrivateKey(ADMIN_PRIVATE_KEY);
-    const adminAccount = await Account.fromPrivateKey({ privateKey });
+    const adminAccount = Account.fromPrivateKey({ privateKey });
 
     if (!adminAccount) return;
 
@@ -154,9 +155,11 @@ const useContract = () => {
       setLoading(true);
       setError(null);
 
+      console.log(adminAccount.accountAddress.toString());
+
       //create txn
       const txn = await aptos.transaction.build.simple({
-        sender: adminAccount.accountAddress.toString(),
+        sender: adminAccount.accountAddress,
         data: {
           function: `${MODULE_ADDRESS}::gamev1::${functionName}`,
           functionArguments: functionArgs,
@@ -164,10 +167,15 @@ const useContract = () => {
         withFeePayer: true,
       });
 
-      const pendingTransaction = await aptos.signAndSubmitTransaction({
+      const adminSenderAuthenticator = await aptos.signAsFeePayer({
         signer: adminAccount,
         transaction: txn,
-        feePayer: adminAccount,
+      });
+
+      const pendingTransaction = await aptos.transaction.submit.simple({
+        transaction: txn,
+        feePayerAuthenticator: adminSenderAuthenticator,
+        senderAuthenticator: adminSenderAuthenticator,
       });
 
       const executedTransaction = await aptos.waitForTransaction({
@@ -183,7 +191,6 @@ const useContract = () => {
     } catch (error: any) {
       console.log(error);
       if (error.status === 400) {
-        disconnect;
         window.location.reload();
       }
       setError(error.toString());

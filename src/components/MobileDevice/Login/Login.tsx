@@ -33,7 +33,7 @@ export const LoginPage = () => {
           className="mt-10 inline-flex items-center rounded-lg bg-white px-8 py-2 text-center text-2xl font-medium text-black shadow-sm shadow-white"
           onClick={handleLogin}
         >
-          <FcGoogle />
+          {/* <FcGoogle /> */}
           <span className="ml-1">Sign in</span>
         </button>
       </div>

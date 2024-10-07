@@ -41,7 +41,7 @@ const Layout = () => {
   const hideSidebarRoutes = ["/marketplace", "/playGame"];
 
   return (
-    <LayoutContainer className="max-w-screen-sm">
+    <LayoutContainer className="">
       <HeaderWrapper>
         <MobileHeader />
       </HeaderWrapper>

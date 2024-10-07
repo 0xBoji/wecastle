@@ -11,7 +11,7 @@ import AuthContext from "../../../contexts/AuthProvider";
 import { FaCaretRight, FaCaretLeft } from "react-icons/fa";
 
 import { useAptosWallet } from "@razorlabs/wallet-kit";
-
+import { useAlert } from "../../../contexts/AlertProvider";
 
 const maps = [
   {
@@ -39,12 +39,15 @@ const HomeMobile = () => {
   const [currentMap, setCurrentMap] = useState(1);
   const [selectedMap, setSelectedMap] = useState(1);
   const [expiryTimestamp, setExpiryTimestamp] = useState(new Date());
+  const { setAlert } = useAlert();
+  const navigate = useNavigate();
 
   const handleClaimCredit = async () => {
     if (!account) return;
-    await claimCredit();
-    await auth?.fetchCreditInfor(account.address.toString());
-    await auth?.fetchPlayerInfo(account.address);
+    claimCredit().then(async () => {
+      await auth?.fetchCreditInfor(account.address.toString());
+      await auth?.fetchPlayerInfo(account.address);
+    });
   };
 
   useEffect(() => {
@@ -75,6 +78,18 @@ const HomeMobile = () => {
       setSelectedMap((prev) => prev + 1);
     } else {
       setSelectedMap((prev) => prev - 1);
+    }
+  };
+
+  const handlePlayGame = () => {
+    if (!auth) return;
+    if (auth?.CreditInfor > 0) {
+      navigate("/playGame");
+    } else {
+      setAlert(
+        "You don't have any credit for play game. Please claim more credit.",
+        "info",
+      );
     }
   };
 
@@ -120,12 +135,13 @@ const HomeMobile = () => {
               disabled={currentMap !== selectedMap}
               className="disabled:opacity-15"
             >
-              <Link
-                to="/playGame"
+              <button
+                // to="/playGame"
+                onClick={handlePlayGame}
                 className="border-2 border-white px-10 py-2 text-2xl hover:bg-white"
               >
                 Play
-              </Link>
+              </button>
             </button>
           </div>
         </div>
