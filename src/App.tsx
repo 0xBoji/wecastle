@@ -6,9 +6,7 @@ import Layout from "./components/MobileDevice/layoutMobile/Layout";
 import { LoginPage } from "./components/MobileDevice/Login/Login";
 import { CallbackPage } from "./components/MobileDevice/layoutMobile/Callback";
 import AuthLayout from "./components/MobileDevice/layoutMobile/AuthLayout";
-import RequireAuth from "./components/MobileDevice/layoutMobile/RequireAuth";
 import PlayGame from "./components/MobileDevice/PlayGame/PlayGame";
-import CreateAccount from "./components/CreateAccout/CreateAccount";
 import HomeMobile from "./components/MobileDevice/homeMobile/HomeMobile";
 import Marketplace from "./components/MobileDevice/marketplace/Marketplace";
 import Document from "./components/MobileDevice/document/Document";
@@ -19,8 +17,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route element={<RequireAuth />}>
-            <Route path="/create-account" element={<CreateAccount />} />
+          <Route>
             <Route path="/playGame" element={<PlayGame />} />
             <Route path="/task" element={<DailyTask />} />
             <Route path="/marketplace" element={<Marketplace />} />
